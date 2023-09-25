@@ -1,0 +1,117 @@
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headArea,
+.bodyArea,
+.buttonArea,
+.textArea {
+  width: 448px;
+}
+
+.headArea {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.bodyArea div {
+  margin: 24px 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gridDiv {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 12px;
+}
+
+.gridDiv div {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  width: auto;
+}
+.bodyArea div label:first-child {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: medium;
+}
+
+.bodyArea input,
+.buttonArea button {
+  font-size: 17px;
+  padding: 14px 20px 15px 20px;
+}
+
+.bodyArea input {
+  border: solid 1px #dddddd;
+}
+
+.error-input::placeholder {
+  color: #dddddd;
+}
+
+.error-input {
+  border: solid 1px #ff334b !important;
+}
+
+.error {
+  margin-top: 8px;
+  color: #ff334b;
+  font-size: 13px;
+}
+
+.buttonArea {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonArea #calBtn {
+  margin-bottom: 12px;
+  background: #4583ee;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonArea #copyBtn {
+  background: white;
+  color: #4583ee;
+  border: solid 1px #4583ee;
+  cursor: pointer;
+}
+
+.textArea {
+  margin-top: 24px;
+  margin-bottom: 40px;
+}
+
+.textArea #output {
+  text-align: left;
+  line-height: 148%;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding-top: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .headArea,
+  .bodyArea,
+  .buttonArea,
+  .textArea {
+    width: 100%;
+  }
+}

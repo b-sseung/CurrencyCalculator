@@ -4,6 +4,154 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>대행 견적 계산기</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      $(function () {
+        $("#hiddenOutput").hide();
+        errorHide();
+        $("input:radio[name=kbn]").on("change", function () {
+          errorHide();
+          if ($(this).val() == 3) {
+            $("#charge").attr("disabled", true);
+            $("#charge").val(0);
+          } else {
+            $("#charge").attr("disabled", false);
+            $("#charge").val("");
+          }
+        });
+
+        $("#calBtn").on("click", function () {
+          errorHide();
+          let errors = [];
+
+          $("input").each(function () {
+            if ($(this).attr("type") !== "radio") {
+              if ($(this).val() == "") {
+                errors.push($(this).attr("id"));
+              }
+            }
+          });
+
+          if ($("input[name=kbn]:checked").val() == undefined) {
+            errors.push("kbn");
+          }
+
+          if (errors.length != 0) {
+            errors.forEach(function (id) {
+              $(`#error-${id}`).show();
+              $(`#${id}`).addClass("error-input");
+            });
+          } else {
+            $("#output").show();
+            createText(
+              $("input[name=kbn]:checked").val(),
+              $("#money").val(),
+              $("#charge").val(),
+              $("#currency").val()
+            );
+          }
+        });
+
+        $("#copyBtn").on("click", function () {
+          $("#calBtn").click();
+          if ($("#output").text() != "") {
+            $("#hiddenOutput").show();
+
+            $("#hiddenOutput").text($("#output").text());
+            $("#hiddenOutput").select();
+            console.log($("#hiddenOutput").text());
+            document.execCommand("copy");
+            $("#hiddenOutput").hide();
+          }
+        });
+      });
+
+      function errorHide() {
+        $("[id ^= error-]").each(function () {
+          $(this).hide();
+          $("#output").hide();
+
+          let id = $(this).attr("id").replace("error-", "");
+          $(`#${id}`).removeClass("error-input");
+        });
+      }
+
+      function createText(chargeLabel, money, charge, currency) {
+        let result = Math.ceil((money * currency) / 100);
+        $("#output").html(
+          `
+          총 입금 금액은 ${result} 원 입니다.</br>
+          토스 사용하시면 토스입금계좌 안내 도와드리겠습니다!</br>
+          </br>
+          💡견적</br>
+          (의뢰금액 ${money}엔${
+            chargeLabel == 1
+              ? ` + 편의점수수료 ${charge}엔`
+              : chargeLabel == 2
+              ? ` + 송금수수료 ${charge}엔`
+              : ""
+          }) * 환율 + 대행수수료 3,000원</br>
+          </br>
+          💡환율</br>
+          ${currency} + 15원 = ${Number.parseFloat(currency) + 15}원
+          `
+        );
+      }
+    </script>
   </head>
-  <body></body>
+  <body>
+    <div class="headArea">
+      <label>대행 견적 계산기</label>
+    </div>
+    <div class="bodyArea">
+      <div>
+        <label>의뢰구분</label>
+        <form class="gridDiv" value="0">
+          <div>
+            <input type="radio" name="kbn" id="radio1" value="1" /><label
+              for="radio1"
+              >편의점</label
+            >
+          </div>
+          <div>
+            <input type="radio" name="kbn" id="radio2" value="2" /><label
+              for="radio2"
+              >송금</label
+            >
+          </div>
+          <div>
+            <input type="radio" name="kbn" id="radio3" value="3" /><label
+              for="radio3"
+              >일반</label
+            >
+          </div>
+        </form>
+        <label class="error" id="error-kbn">필수 선택 값입니다.</label>
+      </div>
+      <div>
+        <label>의뢰금액</label>
+        <input type="number" id="money" placeholder="예: 15100" />
+        <label class="error" id="error-money">필수 입력 값입니다.</label>
+      </div>
+      <div>
+        <label>추가수수료</label>
+        <input type="number" id="charge" placeholder="예: 220" />
+        <label class="error" id="error-charge">필수 입력 값입니다.</label>
+      </div>
+      <div>
+        <label>현재 환율</label>
+        <input type="number" id="currency" placeholder="예: 914.12" />
+        <label class="error" id="error-currency">필수 입력 값입니다.</label>
+      </div>
+    </div>
+    <div class="buttonArea">
+      <button id="calBtn">견적 계산</button>
+      <button id="copyBtn">문장 복사</button>
+    </div>
+    <div class="textArea">
+      <textarea id="hiddenOutput"></textarea>
+      <label id="output"></label>
+    </div>
+  </body>
 </html>
