@@ -14,7 +14,7 @@ body {
 .bodyArea,
 .buttonArea,
 .textArea {
-  width: 448px;
+  width: 358px;
 }
 
 .headArea {
@@ -83,6 +83,7 @@ body {
   color: white;
   border: none;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .buttonArea #copyBtn {
@@ -90,6 +91,7 @@ body {
   color: #4583ee;
   border: solid 1px #4583ee;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .textArea {
@@ -102,11 +104,11 @@ body {
   line-height: 148%;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 390px) {
   body {
     padding-top: 40px;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .headArea,
   .bodyArea,

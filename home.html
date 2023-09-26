@@ -78,7 +78,7 @@
       }
 
       function createText(chargeLabel, money, charge, currency) {
-        let result = Math.ceil((money * currency) / 100);
+        let result = Math.ceil(((money + charge) * currency) / 100);
         $("#output").html(
           `
           총 입금 금액은 ${result} 원 입니다.</br>
