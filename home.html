@@ -59,7 +59,6 @@
             $("#hiddenOutput").show();
             $("#hiddenOutput").text($("#output").text());
             $("#hiddenOutput").select();
-            console.log($("#hiddenOutput").text());
             document.execCommand("copy");
             $("#hiddenOutput").hide();
           }
@@ -83,17 +82,17 @@
         let result = Math.ceil(((moneyNum + chargeNum) * (currencyFloat + 15)) / 100) + 3000;
 
         $("#output").html(
-          `총 입금 금액은 ${result.toLocaleString()} 원 입니다.</br>` +
-          `토스 사용하시면 토스입금계좌 안내 도와드리겠습니다!</br></br>` +
-          `💡견적</br>` + 
+          `총 입금 금액은 ${result.toLocaleString()} 원 입니다.\n</br>` +
+          `토스 사용하시면 토스입금계좌 안내 도와드리겠습니다!\n\n</br></br>` +
+          `💡견적\n</br>` + 
           `(의뢰금액 ${moneyNum.toLocaleString()}엔${
             chargeLabel == 1
               ? ` + 편의점수수료 ${chargeNum.toLocaleString()}엔`
               : chargeLabel == 2
               ? ` + 송금수수료 ${chargeNum.toLocaleString()}엔`
               : ""
-          }) * 환율 + 대행수수료 3,000원</br></br>` +
-          `💡환율</br>` + 
+          }) * 환율 + 대행수수료 3,000원\n\n</br></br>` +
+          `💡환율\n</br>` + 
           `${currencyFloat.toLocaleString()} + 15원 = ${(currencyFloat + 15).toLocaleString()}원`
         );
       }
