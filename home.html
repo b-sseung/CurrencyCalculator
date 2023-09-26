@@ -78,23 +78,26 @@
       }
 
       function createText(chargeLabel, money, charge, currency) {
-        let result = Math.ceil(((money + charge) * currency) / 100);
+        let moneyNum = Number.parseInt(money);
+        let chargeNum = Number.parseInt(charge);
+        let currencyFloat = Number.parseFloat(currency)
+        let result = Math.ceil(((moneyNum + chargeNum) * currencyFloat) / 100) + 3000;
         $("#output").html(
           `
-          총 입금 금액은 ${result} 원 입니다.</br>
+          총 입금 금액은 ${result.toLocaleString()} 원 입니다.</br>
           토스 사용하시면 토스입금계좌 안내 도와드리겠습니다!</br>
           </br>
           💡견적</br>
-          (의뢰금액 ${money}엔${
+          (의뢰금액 ${moneyNum.toLocaleString()}엔${
             chargeLabel == 1
-              ? ` + 편의점수수료 ${charge}엔`
+              ? ` + 편의점수수료 ${chargeNum.toLocaleString()}엔`
               : chargeLabel == 2
-              ? ` + 송금수수료 ${charge}엔`
+              ? ` + 송금수수료 ${chargeNum.toLocaleString()}엔`
               : ""
           }) * 환율 + 대행수수료 3,000원</br>
           </br>
           💡환율</br>
-          ${currency} + 15원 = ${Number.parseFloat(currency) + 15}원
+          ${currencyFloat.toLocaleString()} + 15원 = ${(currencyFloat + 15).toLocaleString()}원
           `
         );
       }
@@ -141,7 +144,7 @@
       </div>
       <div>
         <label>현재 환율</label>
-        <input type="number" id="currency" placeholder="예: 914.12" />
+        <input type="number" step="0.01" id="currency" placeholder="예: 914.12" />
         <label class="error" id="error-currency">필수 입력 값입니다.</label>
       </div>
     </div>
