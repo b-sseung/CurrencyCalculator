@@ -1,0 +1,47 @@
+/* Flex */
+.flexBox {
+    display: flex;
+
+    &._row {
+        flex-direction: row;
+    }
+
+    &._col {
+        flex-direction: column;
+    }
+}
+
+/* Grid */
+.gridBox {
+    display: grid;
+
+    &._col3 {
+        grid-template-columns: repeat(3, 1fr);
+        align-items: center;
+
+        & {
+            width: 100%;
+        }
+    }
+}
+
+/* Button */
+button {
+    cursor: pointer;
+}
+
+/* label */
+label {
+    text-align: left;
+}
+
+/* error */
+.error {
+    margin-top: 8px;
+    color: #ff334b;
+    font-size: 13px;
+}
+
+.error-input {
+    border: solid 1px #ff334b !important;
+}
