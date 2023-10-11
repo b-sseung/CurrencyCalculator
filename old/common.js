@@ -93,7 +93,7 @@ function createText(chargeLabel, money, charge, currency) {
         `총 입금 금액은 ${result.toLocaleString()} 원 입니다.\n</br></br>` +
         `https://toss.me/일본결제대행/${result.toLocaleString()}</br>` +  
         `토스를 사용하시면 위 링크로 입금해주시면 됩니다!\n\n</br></br>` +
-        `토스를 사용하지 않으시면 일반 계좌를 안내해 드리겠습니다!</br></br>`
+        `토스를 사용하지 않으시면 일반 계좌를 안내해 드리겠습니다!</br></br>` + 
         `💡견적\n</br>` +
         `(의뢰금액 ${moneyNum.toLocaleString()}엔${chargeLabel == 1
             ? ` + 편의점수수료 ${chargeNum.toLocaleString()}엔`
