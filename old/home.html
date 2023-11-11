@@ -37,19 +37,44 @@
         </form>
         <label class="error" id="error-kbn">필수 선택 값입니다.</label>
       </div>
-      <div>
+      <div class="flexBox">
+        <label>의뢰건수</label>
+        <div class="flexBoxRow">
+          <input type="number" inputmode="numeric" id="count" value="1" />
+          <button id="minus">-</button>
+          <button id="plus">+</button>
+        </div>
+        <label class="error" id="error-count">필수 입력 값입니다.</label>
+      </div>
+      <div class="flexBox">
         <label>의뢰금액</label>
-        <input type="number" inputmode="numeric" id="money" placeholder="예: 15100" />
+        <input
+          type="number"
+          inputmode="numeric"
+          id="money"
+          placeholder="예: 15100"
+        />
         <label class="error" id="error-money">필수 입력 값입니다.</label>
       </div>
-      <div>
+      <div class="flexBox">
         <label>추가수수료</label>
-        <input type="number" inputmode="numeric" id="charge" placeholder="예: 220" />
+        <input
+          type="number"
+          inputmode="numeric"
+          id="charge"
+          placeholder="예: 220"
+        />
         <label class="error" id="error-charge">필수 입력 값입니다.</label>
       </div>
-      <div>
+      <div class="flexBox">
         <label>현재 환율</label>
-        <input type="number" inputmode="decimal" step="0.01" id="currency" placeholder="예: 914.12" />
+        <input
+          type="number"
+          inputmode="decimal"
+          step="0.01"
+          id="currency"
+          placeholder="예: 914.12"
+        />
         <label class="error" id="error-currency">필수 입력 값입니다.</label>
       </div>
     </div>

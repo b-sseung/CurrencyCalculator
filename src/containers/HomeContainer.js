@@ -7,6 +7,7 @@ import { apiKey } from "../api/key";
 
 const HomeContainer = () => {
   const [activate, setActivate] = useState(false);
+
   const radios = ["편의점", "송금", "기타"];
 
   $(function () {
@@ -39,9 +40,17 @@ const HomeContainer = () => {
 
     if (e.target.value === "2") {
       $("#charge").attr("disabled", true);
+      $("#count").attr("disabled", false);
       $("#charge").val(0);
     } else {
       $("#charge").attr("disabled", false);
+      $("#count").attr("disabled", false);
+
+      if (e.target.value === "1") {
+        $("#count").attr("disabled", true);
+        $("#count").val(1);
+      }
+
       if ($("#money").val() !== "") {
         getCharge();
       } else {
@@ -78,7 +87,8 @@ const HomeContainer = () => {
         $("input[name=kbn]:checked").val(),
         $("#money").val(),
         $("#charge").val(),
-        $("#currency").val()
+        $("#currency").val(),
+        $("#count").val()
       );
 
       if (e.target.id === "copyBtn") {
@@ -91,30 +101,50 @@ const HomeContainer = () => {
     }
   };
 
-  const clickGetCurrency = () => {
-    getCurrency(apiKey).then((result) => {
-      console.log(result.json());
-    });
+  const clickPlus = () => {
+    if ($("#count").attr("disabled") == undefined) {
+      let value = Number.parseInt($("#count").val());
+      $("#count").val(value + 1);
+    }
   };
 
-  const createText = (chargeLabel, money, charge, currency) => {
+  const clickMinus = () => {
+    if ($("#count").attr("disabled") == undefined) {
+      let value = Number.parseInt($("#count").val());
+      $("#count").val(value - 1);
+    }
+  };
+
+  // const clickGetCurrency = () => {
+  //   getCurrency(apiKey).then((result) => {
+  //     console.log(result.json());
+  //   });
+  // };
+
+  const createText = (chargeLabel, money, charge, currency, count) => {
     let moneyNum = Number.parseInt(money);
     let chargeNum = Number.parseInt(charge);
     let currencyFloat = Number.parseFloat(currency);
+    let countNum = Number.parseInt(count);
     let result =
-      Math.ceil(((moneyNum + chargeNum) * (currencyFloat + 15)) / 100) + 3000;
+      Math.ceil(((moneyNum + chargeNum) * (currencyFloat + 15)) / 100) +
+      3000 * countNum;
 
     $("#output").html(
-      `총 입금 금액은 ${result.toLocaleString()} 원 입니다.\n</br>` +
-        `토스 사용하시면 토스입금계좌 안내 도와드리겠습니다!\n\n</br></br>` +
+      `총 입금 금액은 ${result.toLocaleString()} 원 입니다.\n\n</br></br>` +
+        `https://toss.me/일본결제대행/${result}\n</br>` +
+        `토스를 사용하시면 위 링크로 입금해주시면 됩니다!\n\n</br></br>` +
+        `토스를 사용하지 않으시면 일반 계좌를 안내해 드리겠습니다!\n\n</br></br>` +
         `💡견적\n</br>` +
         `(의뢰금액 ${moneyNum.toLocaleString()}엔${
-          chargeLabel === "0"
+          chargeLabel == 1
             ? ` + 편의점수수료 ${chargeNum.toLocaleString()}엔`
-            : chargeLabel === "1"
+            : chargeLabel == 2
             ? ` + 송금수수료 ${chargeNum.toLocaleString()}엔`
             : ""
-        }) * 환율 + 대행수수료 3,000원\n\n</br></br>` +
+        }) * 환율 + 대행수수료 ${(
+          3000 * countNum
+        ).toLocaleString()}원\n\n</br></br>` +
         `💡환율\n</br>` +
         `${currencyFloat.toLocaleString()} + 15원 = ${(
           currencyFloat + 15
@@ -146,6 +176,25 @@ const HomeContainer = () => {
           <Error id="kbn"></Error>
         </div>
         <div className="flexBox _col parent">
+          <label>의뢰 건수</label>
+          <div className="flexBox">
+            <Input
+              type="number"
+              inputMode="numeric"
+              id="count"
+              value="1"
+              style={{ flexGrow: 1, width: 0 }}
+            />
+            <CurrencyButton style={{ marginLeft: "10px" }} onClick={clickPlus}>
+              +
+            </CurrencyButton>
+            <CurrencyButton style={{ marginLeft: "10px" }} onClick={clickMinus}>
+              -
+            </CurrencyButton>
+          </div>
+          <Error id="count"></Error>
+        </div>
+        <div className="flexBox _col parent">
           <label>의뢰 금액</label>
           <Input
             type="number"
@@ -173,14 +222,14 @@ const HomeContainer = () => {
               inputMode="numeric"
               id="currency"
               placeholder="예: 900.01"
-              style={{ flexGrow: 1 }}
+              style={{ flexGrow: 1, width: 0 }}
             />
-            <CurrencyButton
+            {/* <CurrencyButton
               style={{ marginLeft: "10px" }}
               onClick={clickGetCurrency}
             >
               가져오기
-            </CurrencyButton>
+            </CurrencyButton> */}
           </div>
           <Error id="currency"></Error>
         </div>
