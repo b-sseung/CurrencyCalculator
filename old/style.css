@@ -48,8 +48,15 @@ body {
 
 .gridDiv {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   grid-gap: 12px;
+}
+
+.gridRefeat3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gridRefeat2 {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .gridDiv div {

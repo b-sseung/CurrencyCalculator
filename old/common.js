@@ -79,7 +79,8 @@ $(function () {
         $("#money").val(),
         $("#charge").val(),
         $("#currency").val(),
-        $("#count").val()
+        $("#count").val(),
+        $("input[name=fees]:checked").val()
       );
     }
   });
@@ -106,14 +107,16 @@ function errorHide() {
   });
 }
 
-function createText(chargeLabel, money, charge, currency, count) {
+function createText(chargeLabel, money, charge, currency, count, fees) {
   let moneyNum = Number.parseInt(money);
   let chargeNum = Number.parseInt(charge);
   let currencyFloat = Number.parseFloat(currency);
   let countNum = Number.parseInt(count);
+  let feesNum = Number.parseInt(fees);
   let result =
     Math.ceil(((moneyNum + chargeNum) * (currencyFloat + 15)) / 100) +
-    3000 * countNum;
+    3000 * countNum +
+    1000 * feesNum;
 
   $("#output").html(
     `총 입금 금액은 ${result.toLocaleString()} 원 입니다.\n\n</br></br>` +
@@ -127,9 +130,11 @@ function createText(chargeLabel, money, charge, currency, count) {
           : chargeLabel == 2
           ? ` + 송금수수료 ${chargeNum.toLocaleString()}엔`
           : ""
-      }) * 환율 + 대행수수료 ${(
-        3000 * countNum
-      ).toLocaleString()}원\n\n</br></br>` +
+      }) * 환율 + 대행수수료 ${(3000 * countNum).toLocaleString()}원${
+        feesNum == 0
+          ? ""
+          : " + 추가수수료 " + (fees * 1000).toLocaleString() + "원"
+      } \n\n</br></br>` +
       `💡환율\n</br>` +
       `${currencyFloat.toLocaleString()} + 15원 = ${(
         currencyFloat + 15

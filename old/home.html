@@ -15,7 +15,7 @@
     <div class="bodyArea">
       <div class="flexBox">
         <label>의뢰구분</label>
-        <form class="gridDiv" value="0">
+        <form class="gridDiv gridRefeat3" value="0">
           <div>
             <input type="radio" name="kbn" id="radio1" value="1" /><label
               for="radio1"
@@ -36,6 +36,27 @@
           </div>
         </form>
         <label class="error" id="error-kbn">필수 선택 값입니다.</label>
+      </div>
+      <div class="flexBox">
+        <label>마감 수수료</label>
+        <form class="gridDiv gridRefeat2">
+          <div>
+            <input type="radio" name="fees" id="fees1" value="1" /><label
+              for="fees1"
+              >해당</label
+            >
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="fees"
+              id="fees0"
+              value="0"
+              checked
+            /><label for="fees0">비해당</label>
+          </div>
+        </form>
+        <label class="error" id="error-fees">필수 선택 값입니다.</label>
       </div>
       <div class="flexBox">
         <label>의뢰건수</label>
