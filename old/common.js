@@ -118,7 +118,7 @@ function createText(chargeLabel, money, charge, currency, count, fees) {
     3000 * countNum + feesNum;
 
   $("#output").html(
-    `총 입금 금액은 ${result.toLocaleString()} 원 입니다.\n\n</br></br>` +
+    `총 입금 금액은 ${result.toLocaleString()}원 입니다.\n\n</br></br>` +
       `https://toss.me/일본결제대행/${result}\n</br>` +
       `토스를 사용하시면 위 링크로 입금해주시면 됩니다!\n\n</br></br>` +
       `토스를 사용하지 않으시면 일반 계좌를 안내해 드리겠습니다!\n\n</br></br>` +
@@ -132,7 +132,7 @@ function createText(chargeLabel, money, charge, currency, count, fees) {
       }) * 환율 + 대행수수료 ${(3000 * countNum).toLocaleString()}원${
         feesNum == 0
           ? ""
-          : " + 추가수수료 " + fees.toLocaleString() + "원"
+          : ` + 추가수수료 ${fees.toLocaleString()}원`
       } \n\n</br></br>` +
       `💡환율\n</br>` +
       `${currencyFloat.toLocaleString()} + 15원 = ${(
