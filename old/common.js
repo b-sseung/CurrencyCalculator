@@ -132,7 +132,7 @@ function createText(chargeLabel, money, charge, currency, count, fees) {
       }) * 환율 + 대행수수료 ${(3000 * countNum).toLocaleString()}원${
         feesNum == 0
           ? ""
-          : ` + 추가수수료 ${fees.toLocaleString()}원`
+          : ` + 추가수수료 ${feesNum.toLocaleString()}원`
       } \n\n</br></br>` +
       `💡환율\n</br>` +
       `${currencyFloat.toLocaleString()} + 15원 = ${(
