@@ -118,10 +118,8 @@ function createText(chargeLabel, money, charge, currency, count, fees) {
     3000 * countNum + feesNum;
 
   $("#output").html(
-    `총 입금 금액은 ${result.toLocaleString()}원 입니다.\n\n</br></br>` +
-      `https://toss.me/일본결제대행/${result}\n</br>` +
-      `토스를 사용하시면 위 링크로 입금해주시면 됩니다!\n\n</br></br>` +
-      `토스를 사용하지 않으시면 일반 계좌를 안내해 드리겠습니다!\n\n</br></br>` +
+    `총 입금해주실 금액은 ${result.toLocaleString()}원입니다.\n\n</br></br>` +
+      `입금 계좌는 3333281063073 카카오뱅크 ㅂㅅㅎ 입니다!\n</br></br>` +
       `💡견적\n</br>` +
       `(의뢰금액 ${moneyNum.toLocaleString()}엔${
         chargeLabel == 1
