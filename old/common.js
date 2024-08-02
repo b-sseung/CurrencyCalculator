@@ -167,5 +167,5 @@ function clickCommonEvent() {
     errors.push("kbn");
   }
   
-  return errors.length > 0 ? true : false;
+  return errors;
 }
