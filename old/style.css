@@ -101,7 +101,7 @@ body {
   flex-direction: column;
 }
 
-.buttonArea #calBtn {
+.buttonArea #accountBtn {
   margin-bottom: 12px;
   background: #4583ee;
   color: white;
@@ -110,7 +110,7 @@ body {
   border-radius: 4px;
 }
 
-.buttonArea #copyBtn {
+.buttonArea #quotationBtn {
   background: white;
   color: #4583ee;
   border: solid 1px #4583ee;
