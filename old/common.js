@@ -52,22 +52,26 @@ $(function () {
   });
 
   $("#calBtn").on("click", function () {
-    errorHide();
-    let errors = [];
-
-    $("input").each(function () {
-      if ($(this).attr("type") !== "radio") {
-        if ($(this).val() == "") {
-          errors.push($(this).attr("id"));
-        }
-      }
-    });
-
-    if ($("input[name=kbn]:checked").val() == undefined) {
-      errors.push("kbn");
+    const hasErrors = clickCommonEvent();
+    if (hasErrors) {
+      errors.forEach(function (id) {
+        $(`#error-${id}`).show();
+        $(`#${id}`).addClass("error-input");
+      });
+    } else {
+      $("#hiddenOutput").show();
+      $("#hiddenOutput").text('입금 계좌는 3333281063073 카카오뱅크 ㅂㅅㅎ 입니다!');
+      $("#hiddenOutput").select();
+      document.execCommand("copy");
+      $("#hiddenOutput").hide();
     }
+    
+  });
 
-    if (errors.length != 0) {
+  $("#copyBtn").on("click", function () {
+    const hasErrors = clickCommonEvent();
+
+    if (hasErrors) {
       errors.forEach(function (id) {
         $(`#error-${id}`).show();
         $(`#${id}`).addClass("error-input");
@@ -83,10 +87,7 @@ $(function () {
         $("#fees").val()
       );
     }
-  });
-
-  $("#copyBtn").on("click", function () {
-    $("#calBtn").click();
+    
     if ($("#output").text() != "") {
       $("#hiddenOutput").show();
       $("#hiddenOutput").text($("#output").text());
@@ -119,7 +120,7 @@ function createText(chargeLabel, money, charge, currency, count, fees) {
 
   $("#output").html(
     `총 입금해주실 금액은 ${result.toLocaleString()}원입니다.\n\n</br></br>` +
-      `입금 계좌는 3333281063073 카카오뱅크 ㅂㅅㅎ 입니다!\n</br></br>` +
+      `대행 진행을 원하신다면 계좌번호를 안내해드리겠습니다!\n<\n/br></br>` +
       `💡견적\n</br>` +
       `(의뢰금액 ${moneyNum.toLocaleString()}엔${
         chargeLabel == 1
@@ -147,4 +148,23 @@ function getCharge() {
   } else if ($("input[name=kbn]:checked").val() == 2) {
     $("#charge").val(value < 30000 ? 220 : 440);
   }
+}
+
+function clickCommonEvent() {
+  errorHide();
+  let errors = [];
+
+  $("input").each(function () {
+    if ($(this).attr("type") !== "radio") {
+      if ($(this).val() == "") {
+        errors.push($(this).attr("id"));
+      }
+    }
+  });
+
+  if ($("input[name=kbn]:checked").val() == undefined) {
+    errors.push("kbn");
+  }
+  
+  return errors.length > 0 ? true : false;
 }
