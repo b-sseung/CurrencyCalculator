@@ -121,7 +121,7 @@ function createText(chargeLabel, money, charge, currency, count, fees) {
 
   $("#output").html(
     `총 입금해주실 금액은 ${result.toLocaleString()}원입니다.\n\n</br></br>` +
-      `대행 진행을 원하신다면 계좌번호를 안내해드리겠습니다!\n<\n/br></br>` +
+      `대행 진행을 원하신다면 계좌번호를 안내해드리겠습니다!\n\n</br></br>` +
       `💡견적\n</br>` +
       `(의뢰금액 ${moneyNum.toLocaleString()}엔${
         chargeLabel == 1
