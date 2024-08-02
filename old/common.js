@@ -52,8 +52,9 @@ $(function () {
   });
 
   $("#accountBtn").on("click", function () {
-    const hasErrors = clickCommonEvent();
-    if (hasErrors) {
+    const errors = clickCommonEvent();
+
+    if (errors.length > 0) {
       errors.forEach(function (id) {
         $(`#error-${id}`).show();
         $(`#${id}`).addClass("error-input");
@@ -69,9 +70,9 @@ $(function () {
   });
 
   $("#quotationBtn").on("click", function () {
-    const hasErrors = clickCommonEvent();
+    const errors = clickCommonEvent();
 
-    if (hasErrors) {
+    if (errors.length > 0) {
       errors.forEach(function (id) {
         $(`#error-${id}`).show();
         $(`#${id}`).addClass("error-input");
