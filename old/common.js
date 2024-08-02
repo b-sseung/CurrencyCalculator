@@ -51,7 +51,7 @@ $(function () {
     }
   });
 
-  $("#calBtn").on("click", function () {
+  $("#accountBtn").on("click", function () {
     const hasErrors = clickCommonEvent();
     if (hasErrors) {
       errors.forEach(function (id) {
@@ -68,7 +68,7 @@ $(function () {
     
   });
 
-  $("#copyBtn").on("click", function () {
+  $("#quotationBtn").on("click", function () {
     const hasErrors = clickCommonEvent();
 
     if (hasErrors) {
