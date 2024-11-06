@@ -190,7 +190,7 @@ const HomeContainer = () => {
               <label htmlFor="showAccount">계좌번호 안내하기</label>
             </div>
           </Body>
-          <Area className="flexBox _col" style={{ marginTop: '48px' }}>
+          <Area className="flexBox _col" style={{ marginTop: '48px', marginBottom: '48px' }}>
             <Button id="calBtn" onClick={onClick}>
               견적 계산
             </Button>
