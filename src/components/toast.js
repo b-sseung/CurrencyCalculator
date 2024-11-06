@@ -4,11 +4,11 @@ import styled from 'styled-components';
 const animation = keyframes`
   0% {
     opacity: 0;
-    transform: translateY(1rem);
+    transform: translate(-50%, -30%);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, -50%);
   }
 `;
 
@@ -20,6 +20,7 @@ const Aside = styled.aside`
   padding: 10px 50px;
   background: gray;
   border-radius: 50px;
+  transform: ;
 `;
 
 const Toast = ({ text }) => {

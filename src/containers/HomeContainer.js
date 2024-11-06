@@ -125,6 +125,7 @@ const HomeContainer = () => {
   }, [count]);
 
   const calculate = () => {
+    setIsToastVisible(false);
     let result = Math.ceil(((Number.parseInt(kingaku) + Number.parseInt(tesuryo)) * (Number.parseFloat(currency) + 15)) / 100) + 3000 * Number.parseInt(count);
     setAmount(result);
   };
@@ -181,7 +182,7 @@ const HomeContainer = () => {
             </div>
             <div className="flexBox _col parent">
               <label>현재 환율</label>
-              <Input type="number" inputMode="numeric" id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)} placeholder="예: 900.01" />
+              <Input type="number" inputMode="decimal" id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)} placeholder="예: 900.01" />
               <Error id="currency"></Error>
             </div>
             <div className="_col parent">
