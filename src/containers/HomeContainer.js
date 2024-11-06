@@ -1,61 +1,73 @@
-import $ from "jquery";
-import { useState } from "react";
-import styled from "styled-components";
-import { RadioItem, Error, errorHide } from "../components/common";
-import { getCurrency } from "../api/common";
-import { apiKey } from "../api/key";
+import $ from 'jquery';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import styled from 'styled-components';
+import { RadioItem, Table2Row, Error, errorHide } from '../components/common';
+import Toast from '../components/toast';
 
 const HomeContainer = () => {
-  const [activate, setActivate] = useState(false);
+  const [isToastVisible, setIsToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-  const radios = ["편의점", "송금", "기타"];
+  const [showResult, setShowResult] = useState(false);
 
-  $(function () {
-    //エラー、コピーテキストエリア隠す
-    $("#hiddenOutput").hide();
+  const [category, setCategory] = useState('store');
+  const [fees, setFees] = useState('0');
+  const [count, setCount] = useState('1');
+  const [kingaku, setKingaku] = useState('');
+  const [tesuryo, setTesuryo] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [amount, setAmount] = useState('0');
+
+  const [writeAccount, setWriteAccount] = useState(false);
+
+  const radios = { store: '편의점', card: '카드・페이' };
+  const account = process.env.REACT_APP_ACCOUNT;
+
+  useEffect(() => {
     errorHide();
+    $('#hiddenOutput').hide();
+  }, []);
 
-    //input非活性
-    $("input[type=number]").each(function () {
-      $(this).attr("disabled", true);
-    });
-  });
+  useEffect(() => {
+    errorHide();
+    $('#hiddenOutput').hide();
+
+    if (showResult) {
+      $('tr').each((index, _tr) => {
+        const child = $(_tr).find('td');
+
+        const row1text = $(child[0]).text();
+        const row2text = $(child[1]).text();
+
+        $('#hiddenOutput').append(row1text + row2text + '\n');
+      });
+      try {
+        navigator.clipboard.writeText($('#hiddenOutput').text());
+      } catch (err) {
+        settingTimer('알 수 없는 에러 발생 /n 새로고침ㄱㄱ');
+      }
+    }
+  }, [showResult]);
 
   const getCharge = () => {
-    let value = Number.parseInt($("#money").val());
-
-    if ($("input[name=kbn]:checked").val() === "0") {
-      $("#charge").val(Math.ceil(value / 10000) * 110);
-    } else if ($("input[name=kbn]:checked").val() === "1") {
-      $("#charge").val(value < 30000 ? 220 : 440);
+    if ($('#store').is(':checked')) {
+      setTesuryo(Math.ceil(kingaku / 10000) * 110);
+    } else {
+      setTesuryo(0);
     }
   };
 
   const onChangeKbn = (e) => {
-    $("input[type=number]").each(function () {
-      $(this).attr("disabled", false);
-    });
-
     errorHide();
 
-    if (e.target.value === "2") {
-      $("#charge").attr("disabled", true);
-      $("#count").attr("disabled", false);
-      $("#charge").val(0);
+    $('#count').attr('disabled', false);
+    setCategory(e.target.value);
+    getCharge(e.target.value);
+
+    if (e.target.value === 'store') {
+      $('#tesuryo').attr('disabled', false);
     } else {
-      $("#charge").attr("disabled", false);
-      $("#count").attr("disabled", false);
-
-      if (e.target.value === "1") {
-        $("#count").attr("disabled", true);
-        $("#count").val(1);
-      }
-
-      if ($("#money").val() !== "") {
-        getCharge();
-      } else {
-        $("#charge").val("");
-      }
+      $('#tesuryo').attr('disabled', true);
     }
   };
 
@@ -63,189 +75,163 @@ const HomeContainer = () => {
     errorHide();
     let errors = [];
 
-    $("input").each(function () {
-      if ($(this).attr("type") !== "radio") {
-        if ($(this).val() === "") {
-          errors.push($(this).attr("id"));
+    $('input').each(function () {
+      if ($(this).attr('type') !== 'radio') {
+        if ($(this).val() === '') {
+          errors.push($(this).attr('id'));
         }
       }
     });
 
-    if ($("input[name=kbn]:checked").val() === undefined) {
-      errors.push("kbn");
-    }
-
     if (errors.length !== 0) {
       errors.forEach(function (id) {
         $(`#error-${id}`).show();
-        $(`#${id}`).addClass("error-input");
+        $(`#${id}`).addClass('error-input');
       });
     } else {
-      $("#output").show();
+      $('#output').show();
 
-      createText(
-        $("input[name=kbn]:checked").val(),
-        $("#money").val(),
-        $("#charge").val(),
-        $("#currency").val(),
-        $("#count").val()
-      );
+      calculate();
 
-      if (e.target.id === "copyBtn") {
-        $("#hiddenOutput").show();
-        $("#hiddenOutput").text($("#output").text());
-        $("#hiddenOutput").select();
-        document.execCommand("copy");
-        $("#hiddenOutput").hide();
-      }
+      setShowResult(true);
+      settingTimer('복사 완료');
     }
   };
 
-  const clickPlus = () => {
-    if ($("#count").attr("disabled") == undefined) {
-      let value = Number.parseInt($("#count").val());
-      $("#count").val(value + 1);
-    }
+  const settingTimer = (text) => {
+    setIsToastVisible(true);
+    setToastMessage(text);
+
+    setTimeout(() => {
+      setIsToastVisible(false);
+    }, 2000);
   };
 
-  const clickMinus = () => {
-    if ($("#count").attr("disabled") == undefined) {
-      let value = Number.parseInt($("#count").val());
-      $("#count").val(value - 1);
-    }
+  const onCopyAccount = useCallback(() => {
+    navigator.clipboard.writeText(`입금 계좌는 ${account} 카카오뱅크 ㅂㅅㅎ입니다.`);
+    settingTimer('복사 완료');
+  }, []);
+
+  const onChangeCnt = useCallback((event) => {
+    setCount(event.target.value);
+  }, []);
+
+  const clickPlus = useCallback(() => {
+    setCount(count + 1);
+  }, [count]);
+
+  const clickMinus = useCallback(() => {
+    setCount(count - 1 < 0 ? 0 : count - 1);
+  }, [count]);
+
+  const calculate = () => {
+    let result = Math.ceil(((Number.parseInt(kingaku) + Number.parseInt(tesuryo)) * (Number.parseFloat(currency) + 15)) / 100) + 3000 * Number.parseInt(count);
+    setAmount(result);
   };
 
-  // const clickGetCurrency = () => {
-  //   getCurrency(apiKey).then((result) => {
-  //     console.log(result.json());
-  //   });
-  // };
-
-  const createText = (chargeLabel, money, charge, currency, count) => {
-    let moneyNum = Number.parseInt(money);
-    let chargeNum = Number.parseInt(charge);
-    let currencyFloat = Number.parseFloat(currency);
-    let countNum = Number.parseInt(count);
-    let result =
-      Math.ceil(((moneyNum + chargeNum) * (currencyFloat + 15)) / 100) +
-      3000 * countNum;
-
-    $("#output").html(
-      `총 입금 금액은 ${result.toLocaleString()} 원 입니다.\n\n</br></br>` +
-        `https://toss.me/일본결제대행/${result}\n</br>` +
-        `토스를 사용하시면 위 링크로 입금해주시면 됩니다!\n\n</br></br>` +
-        `토스를 사용하지 않으시면 일반 계좌를 안내해 드리겠습니다!\n\n</br></br>` +
-        `💡견적\n</br>` +
-        `(의뢰금액 ${moneyNum.toLocaleString()}엔${
-          chargeLabel == 1
-            ? ` + 편의점수수료 ${chargeNum.toLocaleString()}엔`
-            : chargeLabel == 2
-            ? ` + 송금수수료 ${chargeNum.toLocaleString()}엔`
-            : ""
-        }) * 환율 + 대행수수료 ${(
-          3000 * countNum
-        ).toLocaleString()}원\n\n</br></br>` +
-        `💡환율\n</br>` +
-        `${currencyFloat.toLocaleString()} + 15원 = ${(
-          currencyFloat + 15
-        ).toLocaleString()}원`
-    );
+  const fillBlank = (text) => {
+    return text.toLocaleString();
   };
 
   return (
-    <AreaParent className="flexBox _col">
+    <AreaParent className="flexBox _col" onClick={() => (isToastVisible === true ? setIsToastVisible(false) : '')}>
       <Head>
         <label>대행 견적 계산기</label>
       </Head>
-      <Body>
-        <div className="flexBox _col parent">
-          <label>의뢰구분</label>
-          <div className="gridBox _col3" style={{ gridGap: "12px" }}>
-            {radios.map((text, index) => {
-              return (
-                <RadioItem
-                  key={index}
-                  text={text}
-                  index={index}
-                  name="kbn"
-                  onChange={onChangeKbn}
-                ></RadioItem>
-              );
-            })}
-          </div>
-          <Error id="kbn"></Error>
-        </div>
-        <div className="flexBox _col parent">
-          <label>의뢰 건수</label>
-          <div className="flexBox">
-            <Input
-              type="number"
-              inputMode="numeric"
-              id="count"
-              value="1"
-              style={{ flexGrow: 1, width: 0 }}
-            />
-            <CurrencyButton style={{ marginLeft: "10px" }} onClick={clickPlus}>
-              +
-            </CurrencyButton>
-            <CurrencyButton style={{ marginLeft: "10px" }} onClick={clickMinus}>
-              -
-            </CurrencyButton>
-          </div>
-          <Error id="count"></Error>
-        </div>
-        <div className="flexBox _col parent">
-          <label>의뢰 금액</label>
-          <Input
-            type="number"
-            inputMode="numeric"
-            id="money"
-            placeholder="예: 15100"
-          />
-          <Error id="money"></Error>
-        </div>
-        <div className="flexBox _col parent">
-          <label>추가 수수료</label>
-          <Input
-            type="number"
-            inputMode="numeric"
-            id="charge"
-            placeholder="예: 220"
-          />
-          <Error id="charge"></Error>
-        </div>
-        <div className="flexBox _col parent">
-          <label>현재 환율</label>
-          <div className="flexBox">
-            <Input
-              type="number"
-              inputMode="numeric"
-              id="currency"
-              placeholder="예: 900.01"
-              style={{ flexGrow: 1, width: 0 }}
-            />
-            {/* <CurrencyButton
-              style={{ marginLeft: "10px" }}
-              onClick={clickGetCurrency}
-            >
-              가져오기
-            </CurrencyButton> */}
-          </div>
-          <Error id="currency"></Error>
-        </div>
-      </Body>
-      <Area className="flexBox _col" style={{ marginTop: "48px" }}>
-        <Button id="calBtn" onClick={onClick}>
-          견적 계산
-        </Button>
-        <Button id="copyBtn" onClick={onClick}>
-          문장 복사
-        </Button>
-      </Area>
-      <Text>
-        <textarea id="hiddenOutput"></textarea>
-        <label id="output"></label>
-      </Text>
+      {isToastVisible && <Toast text={toastMessage} setToast={setIsToastVisible}></Toast>}
+      {!showResult && (
+        <>
+          <Body>
+            <div className="flexBox _col parent">
+              <label>의뢰구분</label>
+              <fieldset style={{ border: 'solid 1px #dddddd', padding: '14px 20px 15px 20px' }} className="gridBox _col2">
+                {Object.keys(radios).map((key) => {
+                  return <RadioItem key={key} id={key} text={radios[key]} name="kbn" onChange={onChangeKbn} isCheck={key === category}></RadioItem>;
+                })}
+              </fieldset>
+              <Error id="kbn"></Error>
+            </div>
+            <div className="flexBox _col parent">
+              <label>마감 수수료</label>
+              <Input type="number" inputMode="numeric" id="fees" onChange={(e) => setFees(e.target.value)} value={fees} />
+              <Error id="count"></Error>
+            </div>
+            <div className="flexBox _col parent">
+              <label>의뢰 건수</label>
+              <div className="flexBox">
+                <Input type="number" inputMode="numeric" id="count" style={{ flexGrow: 1, width: 0 }} onChange={onChangeCnt} value={count} />
+                <CurrencyButton style={{ marginLeft: '10px' }} onClick={clickPlus}>
+                  +
+                </CurrencyButton>
+                <CurrencyButton style={{ marginLeft: '10px' }} onClick={clickMinus}>
+                  -
+                </CurrencyButton>
+              </div>
+              <Error id="count"></Error>
+            </div>
+            <div className="flexBox _col parent">
+              <label>의뢰 금액</label>
+              <Input type="number" inputMode="numeric" id="kingaku" value={kingaku} onChange={(e) => setKingaku(e.target.value)} onBlur={getCharge} placeholder="예: 15100" />
+              <Error id="kingaku"></Error>
+            </div>
+            <div className="flexBox _col parent">
+              <label>추가 수수료</label>
+              <Input type="number" inputMode="numeric" id="tesuryo" value={tesuryo} onChange={(e) => setTesuryo(e.target.value)} placeholder="예: 220" />
+              <Error id="tesuryo"></Error>
+            </div>
+            <div className="flexBox _col parent">
+              <label>현재 환율</label>
+              <Input type="number" inputMode="numeric" id="currency" value={currency} onChange={(e) => setCurrency(e.target.value)} placeholder="예: 900.01" />
+              <Error id="currency"></Error>
+            </div>
+            <div className="_col parent">
+              <input id="showAccount" type="checkbox" style={{ marginRight: '5px' }} checked={writeAccount} onChange={() => setWriteAccount(!writeAccount)} />
+              <label htmlFor="showAccount">계좌번호 안내하기</label>
+            </div>
+          </Body>
+          <Area className="flexBox _col" style={{ marginTop: '48px' }}>
+            <Button id="calBtn" onClick={onClick}>
+              견적 계산
+            </Button>
+            <Button id="accountBtn" onClick={onCopyAccount}>
+              계좌 복사
+            </Button>
+          </Area>
+        </>
+      )}
+      {showResult && (
+        <>
+          <Area className="flexBox _col" style={{ marginTop: '24px', marginBottom: '48px' }}>
+            <Button id="calBtn" onClick={() => setShowResult(false)}>
+              수정하기
+            </Button>
+            <Button id="calBtn" onClick={onClick}>
+              견적 다시 복사
+            </Button>
+            <Button id="accountBtn" onClick={onCopyAccount}>
+              계좌 복사
+            </Button>
+          </Area>
+          <Body>
+            <table id="copyArea" style={{ width: '100%' }}>
+              <tbody>
+                <Table2Row row1={'✔ 견적'}></Table2Row>
+                <Table2Row row1={'　💡 적용환율 : '} row2={`${fillBlank(Number.parseFloat(currency) + 15)}원`}></Table2Row>
+                <Table2Row row1={'　💡 결제금액 : '} row2={`${fillBlank(Number.parseInt(kingaku))}엔`}></Table2Row>
+                <Table2Row row1={'　　　+ 수수료 : '} row2={`${fillBlank(Number.parseInt(tesuryo))}엔`}></Table2Row>
+                <Table2Row row1={'　⭕ 계산결과 : '} row2={`${fillBlank(Number.parseInt(amount))}원`}></Table2Row>
+                {fees != 0 && <Table2Row row1={'　　　+ 마감수수료 : '} row2={`${fillBlank(Number.parseInt(fees))}원`}></Table2Row>}
+                <Table2Row row2={'----------------------------'}></Table2Row>
+                <Table2Row row1={'💰 입금금액 : '} row2={`${fillBlank(Number.parseInt(amount) + Number.parseInt(fees))}원`}></Table2Row>
+                <Table2Row row2={'----------------------------'}></Table2Row>
+                {writeAccount && <Table2Row row1={`입금 계좌는 ${account} 카카오뱅크 ㅂㅅㅎ입니다.`}></Table2Row>}
+                {!writeAccount && <Table2Row row1={'대행 진행을 원하신다면 입금 계좌를 안내해드리겠습니다!'}></Table2Row>}
+              </tbody>
+            </table>
+          </Body>
+          <textarea id="hiddenOutput"></textarea>
+        </>
+      )}
     </AreaParent>
   );
 };
@@ -284,14 +270,6 @@ const Body = styled(Area)`
   }
 `;
 
-const Text = styled(Area)`
-  margin-top: 24px;
-  margin-bottom: 40px;
-
-  #output {
-    line-height: 148%;
-  }
-`;
 const Input = styled.input`
   font-size: 17px;
   padding: 14px 20px 15px 20px;
@@ -330,5 +308,6 @@ const CurrencyButton = styled(BaseButton)`
   border: solid 1px #777777;
   background: #ffffff;
   font-size: 13px;
+  width: 50px;
 `;
 export default HomeContainer;
