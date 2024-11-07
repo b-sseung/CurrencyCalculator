@@ -117,11 +117,11 @@ const HomeContainer = () => {
   }, []);
 
   const clickPlus = useCallback(() => {
-    setCount(count + 1);
+    setCount(Number.parseInt(count) + 1);
   }, [count]);
 
   const clickMinus = useCallback(() => {
-    setCount(count - 1 < 0 ? 0 : count - 1);
+    setCount(Number.parseInt(count) - 1 < 0 ? 0 : Number.parseInt(count) - 1);
   }, [count]);
 
   const calculate = () => {
