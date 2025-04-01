@@ -216,7 +216,7 @@ const HomeContainer = () => {
           <Body>
             <table id="copyArea" style={{ width: '100%' }}>
               <tbody>
-                <Table2Row row1={'✔ 견적'}></Table2Row>
+                <Table2Row row1={`✔ 견적 (총 ${count}건)`}></Table2Row>
                 <Table2Row row1={'　💡 적용환율 : '} row2={`${fillBlank(Number.parseFloat(currency) + 15)}원`}></Table2Row>
                 <Table2Row row1={'　💡 결제금액 : '} row2={`${fillBlank(Number.parseInt(kingaku))}엔`}></Table2Row>
                 <Table2Row row1={'　　　+ 수수료 : '} row2={`${fillBlank(Number.parseInt(tesuryo))}엔`}></Table2Row>
